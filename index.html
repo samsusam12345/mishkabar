@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram WebApp</title>
+    <title>Telegram WebApp Card</title>
 
     <!-- Include the Telegram Web App script -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -11,33 +11,109 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
+
+        .card {
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
         }
-        pre {
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+        }
+
+        .card-front {
+            background-color: #fff;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card-back {
+            background-color: #333;
+            color: #fff;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card-inner.flip {
+            transform: rotateY(180deg);
+        }
+
+        .qr-code {
+            width: 100px;
+            height: 100px;
             background-color: #e0e0e0;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border-radius: 10px;
         }
-        #full-url {
-            margin-top: 20px;
-            color: #555;
-            font-size: 14px;
+
+        .info p {
+            margin: 5px 0;
+        }
+
+        .full-url {
+            margin-top: 10px;
+            color: #888;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <h1>Telegram WebApp Data</h1>
-    <div id="data">
-        <p>Loading...</p>
+    <div class="card">
+        <div class="card-inner" id="card">
+            <div class="card-front">
+                <div class="qr-code">
+                    <!-- Placeholder for QR Code -->
+                    <img src="https://via.placeholder.com/100x100.png?text=QR" alt="QR Code">
+                </div>
+                <div class="info">
+                    <p id="first-last-name">Loading...</p>
+                    <p id="username"></p>
+                </div>
+            </div>
+            <div class="card-back">
+                <div class="info" id="extra-info">
+                    <p>Loading...</p>
+                </div>
+                <div class="full-url" id="full-url"></div>
+            </div>
+        </div>
     </div>
-    <p id="full-url"></p>
 
     <script>
         // Ensure that the Telegram Web App script has loaded
@@ -47,21 +123,34 @@
         const initData = tg.initData;
         const initDataUnsafe = tg.initDataUnsafe;
 
+        // Debugging: Log the initData and initDataUnsafe to the console
         console.log("initData:", initData);
         console.log("initDataUnsafe:", initDataUnsafe);
 
-        // Display the initData or an error message
-        if (initData) {
-            document.getElementById('data').innerHTML = `
-                <pre>initData: ${initData}</pre>
-                <pre>initDataUnsafe: ${JSON.stringify(initDataUnsafe, null, 2)}</pre>
-            `;
-        } else {
-            document.getElementById('data').textContent = 'No initData provided!';
-        }
+        // Display the user's first and last name, and username on the front of the card
+        const fullName = `${initDataUnsafe.user.first_name} ${initDataUnsafe.user.last_name || ''}`.trim();
+        const username = initDataUnsafe.user.username ? `@${initDataUnsafe.user.username}` : 'No Username';
+
+        document.getElementById('first-last-name').textContent = fullName;
+        document.getElementById('username').textContent = username;
+
+        // Display additional information on the back of the card
+        document.getElementById('extra-info').innerHTML = `
+            <p><strong>User ID:</strong> ${initDataUnsafe.user.id}</p>
+            <p><strong>Language Code:</strong> ${initDataUnsafe.user.language_code || 'Not Provided'}</p>
+            <p><strong>Platform:</strong> ${tg.platform}</p>
+            <p><strong>Version:</strong> ${tg.version}</p>
+            <p><strong>Color Scheme:</strong> ${tg.colorScheme}</p>
+        `;
 
         // Show the full URL for debugging purposes
         document.getElementById('full-url').textContent = "Full URL: " + window.location.href;
+
+        // Flip card on click
+        const cardElement = document.getElementById('card');
+        cardElement.addEventListener('click', () => {
+            cardElement.classList.toggle('flip');
+        });
     </script>
 </body>
 </html>
