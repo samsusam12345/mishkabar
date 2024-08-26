@@ -26,17 +26,26 @@
     <div id="data">
         <p>Loading...</p>
     </div>
-    <script>
-        // Extract initData from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const initData = urlParams.get('initData');
+    <p id="full-url"></p>
+<script>
+    document.getElementById('full-url').textContent = window.location.href;
+</script>
 
-        // Display the initData or an error message
-        if (initData) {
-            document.getElementById('data').innerHTML = '<pre>' + JSON.stringify(Object.fromEntries(urlParams.entries()), null, 2) + '</pre>';
-        } else {
-            document.getElementById('data').textContent = 'No initData provided!';
-        }
-    </script>
+    <script>
+    // Extract initData from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const initData = urlParams.get('initData');
+
+    console.log("URL Parameters:", window.location.search);
+    console.log("initData:", initData);
+
+    // Display the initData or an error message
+    if (initData) {
+        document.getElementById('data').innerHTML = '<pre>' + JSON.stringify(Object.fromEntries(urlParams.entries()), null, 2) + '</pre>';
+    } else {
+        document.getElementById('data').textContent = 'No initData provided!';
+    }
+</script>
+
 </body>
 </html>
