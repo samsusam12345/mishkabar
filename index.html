@@ -22,6 +22,7 @@
                 <div class="info">
                     <p id="first-last-name">Loading...</p>
                     <p id="username"></p>
+                    <p id="phone-number">Phone: Loading...</p>
                 </div>
             </div>
             <div class="card-back">
@@ -39,7 +40,6 @@
 
     <!-- Embedded JavaScript -->
     <script>
-        // Ensure that the Telegram Web App script has loaded
         const tg = window.Telegram.WebApp;
 
         // Expand the WebApp to fullscreen
@@ -49,16 +49,21 @@
         const initData = tg.initData;
         const initDataUnsafe = tg.initDataUnsafe;
 
+        // Extract phone number from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const phoneNumber = urlParams.get('phone');
+
         // Debugging: Log the initData and initDataUnsafe to the console
         console.log("initData:", initData);
         console.log("initDataUnsafe:", initDataUnsafe);
 
-        // Display the user's first and last name, and username on the front of the card
+        // Display the user's first and last name, username, and phone number on the front of the card
         const fullName = `${initDataUnsafe.user.first_name} ${initDataUnsafe.user.last_name || ''}`.trim();
         const username = initDataUnsafe.user.username ? `@${initDataUnsafe.user.username}` : 'No Username';
 
         document.getElementById('first-last-name').textContent = fullName;
         document.getElementById('username').textContent = username;
+        document.getElementById('phone-number').textContent = `Phone: ${phoneNumber || 'Not Provided'}`;
 
         // Display additional information on the back of the card
         document.getElementById('extra-info').innerHTML = `
@@ -68,9 +73,6 @@
             <p><strong>Version:</strong> ${tg.version}</p>
             <p><strong>Color Scheme:</strong> ${tg.colorScheme}</p>
         `;
-
-        // Show the full URL for debugging purposes
-        document.getElementById('full-url').textContent = "Full URL: " + window.location.href;
 
         // Handle input and button state
         const userInput = document.getElementById('user-input');
