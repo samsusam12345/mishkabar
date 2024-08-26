@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram WebApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Telegram WebApp Data</h1>
+    <div id="data">
+        <p>Loading...</p>
+    </div>
+    <script>
+        // Extract initData from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const initData = urlParams.get('initData');
+
+        // Display the initData or an error message
+        if (initData) {
+            document.getElementById('data').innerHTML = '<pre>' + JSON.stringify(Object.fromEntries(urlParams.entries()), null, 2) + '</pre>';
+        } else {
+            document.getElementById('data').textContent = 'No initData provided!';
+        }
+    </script>
+</body>
+</html>
