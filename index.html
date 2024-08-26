@@ -149,8 +149,8 @@
                     <p>Loading...</p>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="user-input" placeholder="Enter some text...">
-                    <button id="submit-button" class="submit-button">Enter</button>
+                    <input type="text" id="user-input" placeholder="Enter some text..." onclick="event.stopPropagation();">
+                    <button id="submit-button" class="submit-button" onclick="event.stopPropagation();">Enter</button>
                 </div>
                 <div class="full-url" id="full-url"></div>
             </div>
@@ -209,7 +209,7 @@
             }
         });
 
-        // Flip card on click
+        // Flip card on click, but avoid flipping when input field or button is clicked
         const cardElement = document.getElementById('card');
         cardElement.addEventListener('click', () => {
             cardElement.classList.toggle('flip');
