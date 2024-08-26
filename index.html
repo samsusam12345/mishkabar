@@ -4,20 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram WebApp</title>
+
+    <!-- Include the Telegram Web App script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
             padding: 0;
+            background-color: #f4f4f4;
         }
         h1 {
             font-size: 24px;
             margin-bottom: 20px;
         }
         pre {
-            background-color: #f4f4f4;
+            background-color: #e0e0e0;
             padding: 15px;
             border-radius: 5px;
+            overflow-x: auto;
+        }
+        #full-url {
+            margin-top: 20px;
+            color: #555;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -27,25 +38,30 @@
         <p>Loading...</p>
     </div>
     <p id="full-url"></p>
-<script>
-    document.getElementById('full-url').textContent = window.location.href;
-</script>
 
     <script>
-    // Extract initData from the URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const initData = urlParams.get('initData');
+        // Ensure that the Telegram Web App script has loaded
+        const tg = window.Telegram.WebApp;
 
-    console.log("URL Parameters:", window.location.search);
-    console.log("initData:", initData);
+        // Access the initData and initDataUnsafe objects
+        const initData = tg.initData;
+        const initDataUnsafe = tg.initDataUnsafe;
 
-    // Display the initData or an error message
-    if (initData) {
-        document.getElementById('data').innerHTML = '<pre>' + JSON.stringify(Object.fromEntries(urlParams.entries()), null, 2) + '</pre>';
-    } else {
-        document.getElementById('data').textContent = 'No initData provided!';
-    }
-</script>
+        console.log("initData:", initData);
+        console.log("initDataUnsafe:", initDataUnsafe);
 
+        // Display the initData or an error message
+        if (initData) {
+            document.getElementById('data').innerHTML = `
+                <pre>initData: ${initData}</pre>
+                <pre>initDataUnsafe: ${JSON.stringify(initDataUnsafe, null, 2)}</pre>
+            `;
+        } else {
+            document.getElementById('data').textContent = 'No initData provided!';
+        }
+
+        // Show the full URL for debugging purposes
+        document.getElementById('full-url').textContent = "Full URL: " + window.location.href;
+    </script>
 </body>
 </html>
