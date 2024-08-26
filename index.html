@@ -7,7 +7,9 @@
 
     <!-- Include the Telegram Web App script -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="style.css">
+
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="https://samsusam12345.github.io/mishkabar/style.css">
 </head>
 <body>
     <div class="card">
@@ -35,7 +37,65 @@
         </div>
     </div>
 
-    <!-- Correct path to the script -->
-    <script src="https://samsusam12345.github.io/mishkabar/script.js"></script>
+    <!-- Embedded JavaScript -->
+    <script>
+        // Ensure that the Telegram Web App script has loaded
+        const tg = window.Telegram.WebApp;
+
+        // Access the initData and initDataUnsafe objects
+        const initData = tg.initData;
+        const initDataUnsafe = tg.initDataUnsafe;
+
+        // Debugging: Log the initData and initDataUnsafe to the console
+        console.log("initData:", initData);
+        console.log("initDataUnsafe:", initDataUnsafe);
+
+        // Display the user's first and last name, and username on the front of the card
+        const fullName = `${initDataUnsafe.user.first_name} ${initDataUnsafe.user.last_name || ''}`.trim();
+        const username = initDataUnsafe.user.username ? `@${initDataUnsafe.user.username}` : 'No Username';
+
+        document.getElementById('first-last-name').textContent = fullName;
+        document.getElementById('username').textContent = username;
+
+        // Display additional information on the back of the card
+        document.getElementById('extra-info').innerHTML = `
+            <p><strong>User ID:</strong> ${initDataUnsafe.user.id}</p>
+            <p><strong>Language Code:</strong> ${initDataUnsafe.user.language_code || 'Not Provided'}</p>
+            <p><strong>Platform:</strong> ${tg.platform}</p>
+            <p><strong>Version:</strong> ${tg.version}</p>
+            <p><strong>Color Scheme:</strong> ${tg.colorScheme}</p>
+        `;
+
+        // Show the full URL for debugging purposes
+        document.getElementById('full-url').textContent = "Full URL: " + window.location.href;
+
+        // Handle input and button state
+        const userInput = document.getElementById('user-input');
+        const submitButton = document.getElementById('submit-button');
+
+        userInput.addEventListener('input', () => {
+            if (userInput.value.trim() !== "") {
+                submitButton.classList.add('active');
+            } else {
+                submitButton.classList.remove('active');
+            }
+        });
+
+        // Handle button click and send data to the bot
+        submitButton.addEventListener('click', () => {
+            const text = userInput.value.trim();
+            if (text !== "") {
+                console.log("Sending data:", text);  // Log the data being sent
+                tg.sendData(text); // Send data to the bot
+                tg.close(); // Close the WebApp
+            }
+        });
+
+        // Flip card on click, but avoid flipping when input field or button is clicked
+        const cardElement = document.getElementById('card');
+        cardElement.addEventListener('click', () => {
+            cardElement.classList.toggle('flip');
+        });
+    </script>
 </body>
 </html>
